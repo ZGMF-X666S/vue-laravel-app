@@ -19,6 +19,13 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0', // 外部公開
-    port: 5174,      // 固定ポート
+    port: 5173,      // 固定ポート
+    strictPort: true
+  },
+
+  // ★ ここを追加 → Laravel の public にビルド
+  build: {
+    outDir: '../backend/public',
+    emptyOutDir: true,
   },
 })
