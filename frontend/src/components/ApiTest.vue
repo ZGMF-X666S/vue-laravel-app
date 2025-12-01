@@ -13,11 +13,14 @@ import axios from 'axios'
 const apiResult = ref({})
 
 const callApi = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/api/test')
-    apiResult.value = response.data
-  } catch (error) {
-    apiResult.value = { error: 'Error' }
-  }
+    try {
+        const response = await axios.get('http://localhost:8080/api/test')
+        apiResult.value = response.data.status
+    } catch (error) {
+        console.error(error) // エラー内容を確認
+        apiResult.value = 'Error'
+    }
 }
+
+
 </script>
