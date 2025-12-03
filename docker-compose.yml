@@ -1,7 +1,9 @@
 services:
   # PHP-FPM + Laravel
   app:
-    image: php:8.2-fpm
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: laravel_app
     working_dir: /var/www/html
     volumes:
@@ -11,19 +13,22 @@ services:
     depends_on:
       - db
 
+
   # Nginx
   web:
-    image: nginx:alpine
-    container_name: nginx_web
+    image: nginx:latest
+    container_name: nginx
     ports:
-      - "8080:80"  # ホストの80番が競合する場合は8080に
+      - "8080:80"
     volumes:
       - ./backend:/var/www/html
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
     networks:
-      - app-network
+    - app-network   # 👈 これを追加
+
 
   # MySQL
   db:
@@ -37,7 +42,6 @@ services:
     networks:
       - app-network
 
-  # Vue (Vite)
   vue:
     image: node:20
     container_name: vue_node
@@ -46,9 +50,14 @@ services:
       - ./frontend:/app
     ports:
       - "5173:5173"
-    command: ["npm", "run", "dev"]
+    command: ["sleep", "infinity"]
     networks:
       - app-network
+
+
+volumes:
+  vue_node_modules:
+
 
 networks:
   app-network:
