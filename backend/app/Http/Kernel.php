@@ -6,20 +6,18 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    /**
-     * アプリ全体に適用するミドルウェア
-     */
+    // 全体ミドルウェア
     protected $middleware = [
-        \App\Http\Middleware\CorsMiddleware::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \Illuminate\Foundation\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
+        // ← これ削除！ \Fruitcake\Cors\HandleCors::class,
+        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
-    /**
-     * ルートグループごとのミドルウェア
-     */
+    // グループミドルウェア
     protected $middlewareGroups = [
         'web' => [
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -31,6 +29,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\CorsMiddleware::class, // ← APIにも付けてもOK（どちらでも可）
         ],
     ];
 
